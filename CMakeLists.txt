@@ -26,6 +26,7 @@ if(NOT OpenIGTLink_FOUND )
 endif()
 
 file(GLOB_RECURSE HEADER_FILES
+        "src/*.h.in"
         "src/*.h"
         "src/*.inl"
         )
@@ -37,7 +38,9 @@ file(GLOB_RECURSE SOURCE_FILES
 # SOFA plugin are basically libraries
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES})
 target_link_libraries(${PROJECT_NAME} Sofa.Framework Sofa.Component.Topology Sofa.Component.StateContainer OpenIGTLink Threads::Threads Sofa.GUI.Component)
+target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>")
 include_directories(src)
+
 
 
 sofa_create_package_with_targets(
