@@ -11,6 +11,18 @@ using namespace sofa::core::objectmodel;
 
 namespace sofa::openigtlink {
 
+/**
+*  \brief This object is used to enable moving the object pre-defined set of
+ *  points around with input point data
+ *
+ *  The input position is only used to activate the spring by setting the output
+ *  "outStiffness" to "inStiffness" until no update of the  input is received
+ *  for "reactionTime" milliseconds.
+ *
+ *  This has to be used along a Spring component. The only thing done by this
+ *  component is to provide an output stiffness value.
+*
+ */
 class UserInteractionController : public BaseObject {
 public :
 
