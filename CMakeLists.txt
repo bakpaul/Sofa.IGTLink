@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(SofaIGTLink VERSION 1.0)
+project(Sofa.IGTLink VERSION 1.0)
 set(CMAKE_CXX_STANDARD 17)
 if(CMAKE_COMPILER_IS_GNUCXX)
         add_compile_options(-Wall -Wextra -Wpedantic)
@@ -14,7 +14,7 @@ find_package(Threads REQUIRED)
 
 find_package(OpenIGTLink QUIET) # Needed to use SofaCore, SofaHelper and SofaDefaultType
 if(NOT OpenIGTLink_FOUND )
-        message("SofaIGTLink: DEPENDENCY OpenIGTLink NOT FOUND, fetching OpenIGTLink...")
+        message("Sofa.IGTLink: DEPENDENCY OpenIGTLink NOT FOUND, fetching OpenIGTLink...")
         include(FetchContent)
         FetchContent_Declare(OpenIGTLink
                 GIT_REPOSITORY https://github.com/openigtlink/OpenIGTLink
