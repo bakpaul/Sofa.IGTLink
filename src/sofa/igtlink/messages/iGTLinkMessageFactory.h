@@ -4,7 +4,6 @@
 #include <map>
 #include <functional>
 #include <iostream>
-#include <memory>
 #include <igtlMessageBase.h>
 
 
@@ -14,7 +13,6 @@ class iGTLinkMessageFactory
 {
 public:
 
-    typedef typename std::shared_ptr<iGTLinkMessageFactory> SPtr;
 
     template<class MessageType>
     int doRegisterMessage(std::string iGTLinkDeviceType)
@@ -33,8 +31,7 @@ public:
     }
 
 
-    template<class MessageType>
-    igtl::MessageBase::Pointer getMessagePtr(std::string iGTLinkDeviceType)
+    igtl::MessageBase::Pointer doGetMessagePtr(std::string iGTLinkDeviceType)
     {
         auto found = m_internalFactoryMap.find(iGTLinkDeviceType);
         if(found != m_internalFactoryMap.end())
@@ -44,12 +41,12 @@ public:
         return nullptr;
     }
 
-    static SPtr getFactory();
+    static iGTLinkMessageFactory* getFactory();
 
     template<class MessageType>
     static igtl::MessageBase::Pointer createMessage()
     {
-        return MessageType::New();
+        return MessageType::New().GetPointer();
     }
 
     template<class MessageType>
@@ -58,9 +55,14 @@ public:
         return getFactory()->doRegisterMessage<MessageType>(iGTLinkDeviceType);
     }
 
+    static igtl::MessageBase::Pointer getMessagePtr(std::string iGTLinkDeviceType)
+    {
+        return getFactory()->doGetMessagePtr(iGTLinkDeviceType);
+    }
+
 
 private:
-    iGTLinkMessageFactory()=default;
+    iGTLinkMessageFactory(){};
     ~iGTLinkMessageFactory()=default;
 
     std::map<std::string,std::function<igtl::MessageBase::Pointer ()> > m_internalFactoryMap;

@@ -5,10 +5,13 @@
 #include <sofa/igtlink/messages/iGTLinkMessageFactory.h>
 namespace sofa::openigtlink
 {
-    iGTLinkMessageFactory::SPtr iGTLinkMessageFactory::getFactory()
+    iGTLinkMessageFactory* iGTLinkMessageFactory::getFactory()
     {
-        static iGTLinkMessageFactory::SPtr factory = nullptr;
-        if (factory == nullptr) factory = std::make_shared<iGTLinkMessageFactory>();
+        static iGTLinkMessageFactory * factory = nullptr;
+        if (factory == nullptr)
+        {
+            factory = new iGTLinkMessageFactory;
+        }
         return factory;
     }
 
