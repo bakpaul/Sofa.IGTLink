@@ -27,7 +27,7 @@ extern "C"
         }
     }
 
-    SOFA_IGTLINK_API const char* getModuleName() { return "SofaIGTLink"; }
+    SOFA_IGTLINK_API const char* getModuleName() { return MODULE_NAME; }
 
     SOFA_IGTLINK_API const char* getModuleVersion() { return "0.0"; }
 
