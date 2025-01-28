@@ -45,12 +45,12 @@ bool iGTLinkServer::tryConnect()
     m_socket = m_serverSocket->WaitForConnection(10);
     if(!m_socket)
     {
-        std::cout << (std::string("No client connected currently on port :") + std::to_string(d_port.getValue())) <<std::endl;
+        msg_warning(this) << "No client connected currently on port :" << d_port.getValue() ;
         d_componentState.setValue(ComponentState::Loading);
     }
     else
     {
-        std::cout << ("One client is connected")<<std::endl;
+        msg_info(this) << "One client is connected" ;
         d_componentState.setValue(ComponentState::Valid);
         if(d_sender.getValue()) {
             m_socket->SetSendTimeout(d_timeout.getValue());
@@ -72,7 +72,7 @@ bool iGTLinkServer::isConnected()
     bool connected = m_socket->GetConnected();
     if(!connected)
     {
-        msg_warning(std::string("Socket not connected to port : ") + std::to_string(d_port.getValue()));
+        msg_info(this) << "Socket not connected to port : " << d_port.getValue();
         d_componentState.setValue(ComponentState::Loading);
     }
     d_componentState.setValue(ComponentState::Valid);

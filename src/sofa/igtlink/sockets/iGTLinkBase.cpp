@@ -30,7 +30,7 @@ namespace sofa::openigtlink
         }
         else
         {
-            msg_warning(std::string("Message with name ") + _object->getName() + " already exists.");
+            msg_warning(this) << "Message with name " << _object->getName() << " already exists.";
         }
     }
 
