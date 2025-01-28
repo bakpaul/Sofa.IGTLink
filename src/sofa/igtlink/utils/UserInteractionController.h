@@ -6,6 +6,7 @@
 #include <chrono>
 
 #include <sofa/core/objectmodel/DataCallback.h>
+#include <sofa/igtlink/config.h>
 
 using namespace sofa::core::objectmodel;
 
@@ -23,7 +24,8 @@ namespace sofa::openigtlink {
  *  component is to provide an output stiffness value.
 *
  */
-class UserInteractionController : public BaseObject {
+class SOFA_IGTLINK_API UserInteractionController : public BaseObject 
+{
 public :
 
     typedef sofa::defaulttype::Vec3dTypes::Coord Vec3d;
