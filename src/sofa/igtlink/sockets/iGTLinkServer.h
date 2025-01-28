@@ -14,23 +14,24 @@ using namespace sofa::core::objectmodel;
 
 namespace sofa::openigtlink
 {
-    class iGTLinkServer : public iGTLinkBase
-    {
-    public:
-        iGTLinkServer();
-        ~iGTLinkServer();
+class iGTLinkServer : public iGTLinkBase
+{
+public:
+    SOFA_CLASS(iGTLinkServer,iGTLinkBase);
 
-        void init();
-//        void bwdInit();
+    iGTLinkServer();
+    ~iGTLinkServer();
 
-        virtual bool tryConnect();
-        virtual bool isConnected();
+    void init();
+
+    virtual bool tryConnect();
+    virtual bool isConnected();
 
 
-    private:
-        igtl::ServerSocket::Pointer m_serverSocket;
-        Data<int> d_port;
+private:
+    igtl::ServerSocket::Pointer m_serverSocket;
+    Data<int> d_port;
 
-    };
+};
 }
 

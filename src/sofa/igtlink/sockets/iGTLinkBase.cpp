@@ -5,92 +5,92 @@
 
 namespace sofa::openigtlink
 {
-    iGTLinkBase::iGTLinkBase()
-    : d_timeout(initData(&d_timeout,-1,"timeout","Timeout in milliseconds"))
-    , d_sender(initData(&d_sender,false,"sender","Are you a sender"))
-    , m_receiverThread(nullptr)
+iGTLinkBase::iGTLinkBase()
+: d_timeout(initData(&d_timeout,-1,"timeout","Timeout in milliseconds"))
+, d_sender(initData(&d_sender,false,"sender","Are you a sender"))
+, m_receiverThread(nullptr)
+{
+    if(!d_sender.getValue())
+        m_receiverThread = new iGTLinkReceiverThread(this);
+    this->f_listening.setValue(true);
+}
+
+
+iGTLinkBase::~iGTLinkBase()
+{
+    m_receiverThread ->stopThread();
+    delete m_receiverThread;
+}
+
+void iGTLinkBase::addMessageObject(iGTLinkMessageBase *_object)
+{
+    if (m_messageObjects.find(_object->getName()) == m_messageObjects.end())
     {
-        if(!d_sender.getValue())
-            m_receiverThread = new iGTLinkReceiverThread(this);
-        this->f_listening.setValue(true);
+        m_messageObjects[_object->getName()] = _object;
     }
-
-
-    iGTLinkBase::~iGTLinkBase()
+    else
     {
-        m_receiverThread ->stopThread();
-        delete m_receiverThread;
+        msg_warning(this) << "Message with name " << _object->getName() << " already exists.";
     }
+}
 
-    void iGTLinkBase::addMessageObject(iGTLinkMessageBase *_object)
+void iGTLinkBase::removeMessageObject(iGTLinkMessageBase *_object)
+{
+    m_messageObjects.erase(_object->getName());
+}
+
+iGTLinkMessageBase* iGTLinkBase::getMessageByName(const std::string& _name)
+{
+    auto it = m_messageObjects.find(_name);
+    if (it == m_messageObjects.end())
+        return nullptr;
+    else
+        return it->second;
+}
+
+
+void iGTLinkBase::updateMessages()
+{
+    if(!d_sender.getValue())
     {
-        if (m_messageObjects.find(_object->getName()) == m_messageObjects.end())
+        if (!m_receiverThread->threadRunning())
         {
-            m_messageObjects[_object->getName()] = _object;
+            m_receiverThread->launchThread();
         }
-        else
+        if (m_receiverThread->isDataAvailable())
         {
-            msg_warning(this) << "Message with name " << _object->getName() << " already exists.";
-        }
-    }
-
-    void iGTLinkBase::removeMessageObject(iGTLinkMessageBase *_object)
-    {
-        m_messageObjects.erase(_object->getName());
-    }
-
-    iGTLinkMessageBase* iGTLinkBase::getMessageByName(const std::string& _name)
-    {
-        auto it = m_messageObjects.find(_name);
-        if (it == m_messageObjects.end())
-            return nullptr;
-        else
-            return it->second;
-    }
-
-
-    void iGTLinkBase::updateMessages()
-    {
-        if(!d_sender.getValue())
-        {
-            if (!m_receiverThread->threadRunning())
+            std::map<std::string, igtl::MessageBase::Pointer> &data = m_receiverThread->getAvailableData();
+            for (auto &dataMessage: data)
             {
-                m_receiverThread->launchThread();
-            }
-            if (m_receiverThread->isDataAvailable())
-            {
-                std::map<std::string, igtl::MessageBase::Pointer> &data = m_receiverThread->getAvailableData();
-                for (auto &dataMessage: data)
-                {
-                    auto registeredMessage = getMessageByName(dataMessage.first);
-                    if (registeredMessage)
-                        registeredMessage->updateData(dataMessage.second);
-                }
-            }
-        }
-        else
-        {
-            for(auto it : m_messageObjects)
-            {
-                if(it.second->getDirty())
-                {
-                    auto message = it.second->getiGTLinkMessage();
-                    m_socket->Send(message->GetPackPointer(), message->GetPackSize());
-                    it.second->setDirty(false);
-                }
+                auto registeredMessage = getMessageByName(dataMessage.first);
+                if (registeredMessage)
+                    registeredMessage->updateData(dataMessage.second);
             }
         }
     }
-
-    void iGTLinkBase::handleEvent(Event *event)
+    else
     {
-        if(sofa::simulation::AnimateBeginEvent::checkEventType(event))
+        for(auto it : m_messageObjects)
         {
-            if(d_componentState.getValue()!=ComponentState::Valid)
+            if(it.second->getDirty())
             {
-                if(!tryConnect()) return;
+                auto message = it.second->getiGTLinkMessage();
+                m_socket->Send(message->GetPackPointer(), message->GetPackSize());
+                it.second->setDirty(false);
             }
-            updateMessages();
         }
     }
+}
+
+void iGTLinkBase::handleEvent(Event *event)
+{
+    if(sofa::simulation::AnimateBeginEvent::checkEventType(event))
+    {
+        if(d_componentState.getValue()!=ComponentState::Valid)
+        {
+            if(!tryConnect()) return;
+        }
+        updateMessages();
+    }
+}
 }

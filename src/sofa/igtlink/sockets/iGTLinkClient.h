@@ -11,21 +11,23 @@ using namespace sofa::core::objectmodel;
 
 namespace sofa::openigtlink
 {
-    class iGTLinkClient : public iGTLinkBase
-    {
-    public:
-        iGTLinkClient();
-        ~iGTLinkClient() = default;
+class iGTLinkClient : public iGTLinkBase
+{
+public:
+    SOFA_CLASS(iGTLinkClient,iGTLinkBase);
 
-        void init();
+    iGTLinkClient();
+    ~iGTLinkClient() = default;
 
-        virtual bool tryConnect();
-        virtual bool isConnected();
+    void init();
 
-    private:
-        Data<std::string> d_hostname;
-        Data<int> d_port;
+    virtual bool tryConnect();
+    virtual bool isConnected();
 
-    };
+private:
+    Data<std::string> d_hostname;
+    Data<int> d_port;
+
+};
 }
 

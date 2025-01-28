@@ -13,44 +13,44 @@ using namespace sofa::core::objectmodel;
 
 namespace sofa::openigtlink
 {
-    class iGTLinkBaseThread
-    {
-    public:
-        iGTLinkBaseThread(iGTLinkBase* _link) : m_link(_link), m_thread(nullptr), m_running(false){}
+class iGTLinkBaseThread
+{
+public:
+    iGTLinkBaseThread(iGTLinkBase* _link) : m_link(_link), m_thread(nullptr), m_running(false){}
 
-        void mainLoop();
+    void mainLoop();
 
-        virtual void doLoop() = 0;
+    virtual void doLoop() = 0;
 
-        bool threadRunning();
-        void launchThread();
-        void stopThread();
+    bool threadRunning();
+    void launchThread();
+    void stopThread();
 
-    protected:
-        std::atomic<bool> m_running;
-        std::shared_ptr<std::thread> m_thread;
-        iGTLinkBase * m_link;
-    };
+protected:
+    std::atomic<bool> m_running;
+    std::shared_ptr<std::thread> m_thread;
+    iGTLinkBase * m_link;
+};
 
-    class iGTLinkReceiverThread : public iGTLinkBaseThread
-    {
-    public:
-        iGTLinkReceiverThread(iGTLinkBase* _link);
+class iGTLinkReceiverThread : public iGTLinkBaseThread
+{
+public:
+    iGTLinkReceiverThread(iGTLinkBase* _link);
 
-        virtual void doLoop();
+    virtual void doLoop();
 
-        bool isDataAvailable();
-        std::map<std::string,igtl::MessageBase::Pointer>& getAvailableData();
+    bool isDataAvailable();
+    std::map<std::string,igtl::MessageBase::Pointer>& getAvailableData();
 
-    private:
-        void swapData();
+private:
+    void swapData();
 
-        std::atomic<unsigned> m_currentData;
-        std::atomic<bool> m_dataAvailable;
-        std::map<std::string,igtl::MessageBase::Pointer> m_dataStructures[2];
-        std::mutex m_mutex[2];
+    std::atomic<unsigned> m_currentData;
+    std::atomic<bool> m_dataAvailable;
+    std::map<std::string,igtl::MessageBase::Pointer> m_dataStructures[2];
+    std::mutex m_mutex[2];
 
 
-    };
+};
 
 }

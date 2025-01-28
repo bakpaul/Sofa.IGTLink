@@ -13,50 +13,50 @@ using namespace sofa::core::objectmodel;
 namespace sofa::openigtlink
 {
 
-    class iGTLinkMessageBase : public BaseObject
+class iGTLinkMessageBase : public BaseObject
+{
+public:
+    SOFA_CLASS(iGTLinkMessageBase,BaseObject);
+
+    iGTLinkMessageBase() : m_isDirty(false) {};
+
+    virtual igtl::MessageBase::Pointer getiGTLinkMessage() = 0;
+    virtual void updateData(igtl::MessageBase::Pointer) = 0;
+
+    void setDirty(bool _dirty)
     {
-    public:
-        SOFA_CLASS(iGTLinkMessageBase,BaseObject);
+        m_isDirty = true;
+    }
 
-        iGTLinkMessageBase() : m_isDirty(false) {};
-
-        virtual igtl::MessageBase::Pointer getiGTLinkMessage() = 0;
-        virtual void updateData(igtl::MessageBase::Pointer) = 0;
-
-        void setDirty(bool _dirty)
-        {
-            m_isDirty = true;
-        }
-
-        const bool getDirty() const
-        {
-            return m_isDirty;
-        }
-
-    private:
-        bool m_isDirty;
-    };
-
-    class iGTLinkMessage : public iGTLinkMessageBase
+    const bool getDirty() const
     {
-    public:
-        SOFA_CLASS(iGTLinkMessage,iGTLinkMessageBase);
+        return m_isDirty;
+    }
 
-        iGTLinkMessage();
-        ~iGTLinkMessage();
+private:
+    bool m_isDirty;
+};
 
-        SingleLink<iGTLinkMessage, iGTLinkBase, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_iGTLink;
+class iGTLinkMessage : public iGTLinkMessageBase
+{
+public:
+    SOFA_CLASS(iGTLinkMessage,iGTLinkMessageBase);
 
-        void init();
+    iGTLinkMessage();
+    ~iGTLinkMessage();
 
-        igtl::MessageBase::Pointer getiGTLinkMessage() = 0;
-        void updateData(igtl::MessageBase::Pointer) = 0;
+    SingleLink<iGTLinkMessage, iGTLinkBase, BaseLink::FLAG_STOREPATH | BaseLink::FLAG_STRONGLINK> l_iGTLink;
+
+    void init();
+
+    igtl::MessageBase::Pointer getiGTLinkMessage() = 0;
+    void updateData(igtl::MessageBase::Pointer) = 0;
 
 
-        static std::string templateName(const iGTLinkMessage* = nullptr) { return "Unknown"; }
+    static std::string templateName(const iGTLinkMessage* = nullptr) { return "Unknown"; }
 
-    private:
-        DataCallback c_callBack;
-    };
+private:
+    DataCallback c_callBack;
+};
 
 }
