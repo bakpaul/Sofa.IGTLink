@@ -15,7 +15,7 @@ namespace sofa::openigtlink
     {
     public:
         iGTLinkClient();
-        ~iGTLinkClient() = default;
+        ~iGTLinkClient();
 
         void init();
 
