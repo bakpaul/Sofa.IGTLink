@@ -7,15 +7,16 @@ namespace sofa
 {
 namespace openigtlink
 {
+extern void registeriGTLinkPointMessage(sofa::core::ObjectFactory* factory);
+extern void registeriGTLinkPolyDataMessage(sofa::core::ObjectFactory* factory);
+extern void registeriGTLinkClient(sofa::core::ObjectFactory* factory);
+extern void registeriGTLinkServer(sofa::core::ObjectFactory* factory);
+extern void registerEngineToMState(sofa::core::ObjectFactory* factory);
+extern void registerPickingInteractor(sofa::core::ObjectFactory* factory);
+extern void registerUserInteractionController(sofa::core::ObjectFactory* factory);
+
 extern "C"
 {
-    extern void registeriGTLinkPointMessage(sofa::core::ObjectFactory* factory);
-    extern void registeriGTLinkPolyDataMessage(sofa::core::ObjectFactory* factory);
-    extern void registeriGTLinkClient(sofa::core::ObjectFactory* factory);
-    extern void registeriGTLinkServer(sofa::core::ObjectFactory* factory);
-    extern void registerEngineToMState(sofa::core::ObjectFactory* factory);
-    extern void registerPickingInteractor(sofa::core::ObjectFactory* factory);
-    extern void registerUserInteractionController(sofa::core::ObjectFactory* factory);
 
     SOFA_IGTLINK_API void initExternalModule()
     {
