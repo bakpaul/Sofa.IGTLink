@@ -55,16 +55,10 @@ void iGTLinkReceiverThread::swapData()
     unsigned swapped = (m_currentData.load(std::memory_order_relaxed) +1) % 2;
     m_dataAvailable.store(false);
     m_currentData.store(swapped);
-//
-//        //Lock to make sure the thread has stopped to work on it
-//        m_mutex[(m_currentData.load(std::memory_order_relaxed) +1) % 2].lock();
-//        //Unlock now we know the thread is not working on it anymore
-//        m_mutex[(m_currentData.load(std::memory_order_relaxed) +1) % 2].unlock();
 }
 
 void iGTLinkReceiverThread::doLoop()
 {
-//        std::lock_guard<std::mutex> lock(m_mutex[m_currentData.load(std::memory_order_relaxed)]);
 
     igtl::MessageHeader::Pointer headerMsg;
     headerMsg = igtl::MessageHeader::New();
